@@ -9,6 +9,7 @@ Params::Params(int argc, char* argv[]) {
     isVerbose = false;
     isRecursive = false;
     isCaseInsensitive = false;
+    path = new char('.');
 
     static struct option long_options[]={
         {"dir", required_argument, NULL, 'd'},
@@ -42,7 +43,6 @@ Params::Params(int argc, char* argv[]) {
                 cout << "Option: '" << (char)c << "' doesn't exist.\n";
                 break;
         }
-        printf("optind: %d\n", optind);
     }
     // fill command
     for (int k=0; k<argc; ++k) {
@@ -50,7 +50,6 @@ Params::Params(int argc, char* argv[]) {
         // fill vector keyWords
         if (k>=optind) {
             keyWords.push_back(argv[k]);
-            printf("%s\n", argv[k]);
         }
     }
 }
