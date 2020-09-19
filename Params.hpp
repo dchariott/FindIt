@@ -1,10 +1,3 @@
-//
-//  Params.hpp
-//  SysProP2
-//
-//  Created by Prehax Xu on 9/15/20.
-//
-
 #ifndef Params_h
 #define Params_h
 #include <iostream>
@@ -21,10 +14,10 @@ private:
     string outputFileName;
     vector<string> keyWords;
     char* path;
-    bool isVerbose = false;
-    bool isRecursive = false;
-    bool isCaseInsensitive = false;
-    string convertBoolToYOrN(bool switchValue);
+    bool isVerbose;
+    bool isRecursive;
+    bool isCaseInsensitive;
+    string convertBoolToYOrN(bool switchValue){return switchValue?"Yes":"No";};
     string command;
 public:
     Params(){};

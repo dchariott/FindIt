@@ -1,17 +1,14 @@
-//
-//  Params.cpp
-//  SysProP2
-//
-//  Created by Prehax Xu on 9/15/20.
-//
-
 #include "Params.hpp"
 
 Params::Params(int argc, char* argv[]) {
-    int c;
+    int c=0;
     int opt_index=0;
     extern char *optarg;
     extern int optind, opterr, optopt;
+    
+    isVerbose = false;
+    isRecursive = false;
+    isCaseInsensitive = false;
 
     static struct option long_options[]={
         {"dir", required_argument, NULL, 'd'},
@@ -19,22 +16,14 @@ Params::Params(int argc, char* argv[]) {
         {NULL, 0, NULL, 0}
     };
     
-    // For test options
-    for (int j = 0; j < argc; ++j) {
+    // This loop only deal with options and their arguments
+    while(true) {
         c=getopt_long(argc, argv, "iRo:d:", long_options, &opt_index);
         if (c==-1) break;
 
-        command += argv[j];
-        command += " ";
         switch (c){
-            case 0:
-                std::cout << "No option" << std::endl;
-                break;
             case 'd':
                 path = optarg;
-                command += "--dir ";
-                command += path;
-                command += " ";
                 break;
             case 'i':
                 isCaseInsensitive = true;
@@ -43,28 +32,28 @@ Params::Params(int argc, char* argv[]) {
                 isRecursive = true;
                 break;
             case 'o':
-                command += optarg;
-                command += " ";
-                outputFile.open(optarg, ofstream::app);
                 outputFileName = optarg;
+                outputFile.open(outputFileName, ofstream::app);
                 break;
             case 'v':
                 isVerbose = true;
                 break;
             default:
-                keyWords.push_back(optarg);
+                cout << "Option: '" << (char)c << "' doesn't exist.\n";
+                break;
+        }
+        printf("optind: %d\n", optind);
+    }
+    // fill command
+    for (int k=0; k<argc; ++k) {
+        command = command + argv[k] + " ";
+        // fill vector keyWords
+        if (k>=optind) {
+            keyWords.push_back(argv[k]);
+            printf("%s\n", argv[k]);
         }
     }
 }
-
-//--------------------------------------------------------------
-string Params::convertBoolToYOrN(bool switchValue) {
-    if (switchValue){
-        return "Yes";
-    }
-    return "No";
-}
-
 //--------------------------------------------------------------
 void Params::print() {
     if(outputFile.is_open()){
