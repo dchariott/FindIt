@@ -62,6 +62,7 @@ void Params::print() {
                    << "\tRecursive? " << convertBoolToYOrN(isRecursive) << endl
                    << "\tOutput file name: " << outputFileName << endl
                    << "\tDirectory: " << path << endl;
+        outputFile.close();
     } else {
         cout << "Command: " << command << endl
                    << "\tVerbose? " << convertBoolToYOrN(isVerbose) << endl
