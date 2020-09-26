@@ -17,12 +17,13 @@ private:
     bool isVerbose;
     bool isRecursive;
     bool isCaseInsensitive;
-    string convertBoolToYOrN(bool switchValue){return switchValue?"Yes":"No";};
+    string convertBoolToYOrN(bool switchValue){ return switchValue? "Yes" : "No"; }
     string command;
 public:
-    Params(){};
+    Params() = default;
     Params(int argc, char * argv[]);
     void print();
+    ~Params(){ if(outputFile.is_open()) outputFile.close();  }
 };
 
 
