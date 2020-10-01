@@ -23,7 +23,7 @@ public:
     Params() = default;
     Params(int argc, char * argv[]);
     void print();
-    ~Params(){ if(outputFile.is_open()) outputFile.close();  }
+    ~Params(){ if(outputFile.is_open()) outputFile.close(); }
 };
 
 

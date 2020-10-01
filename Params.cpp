@@ -53,6 +53,7 @@ Params::Params(int argc, char* argv[]) {
         }
     }
 }
+
 //--------------------------------------------------------------
 void Params::print() {
     if(outputFile.is_open()){
