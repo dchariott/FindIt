@@ -10,7 +10,10 @@ void FileID::print(ostream& out){
 //--------------------------------------------------------------
 
 void FileID::insertSniffWord(const string sniffWord){
-    if (sniffWords.find(sniffWord) == -1 ){
-        sniffWords.push_back(sniffWord);
+    for (string word : sniffWords){
+        if (word == sniffWord){
+            return;
+        }
     }
+    sniffWords.push_back(sniffWord);
 }

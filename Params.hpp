@@ -1,12 +1,9 @@
 #ifndef Params_h
 #define Params_h
-#include <iostream>
-#include <unistd.h>
-#include <getopt.h>
+#include "tools.hpp"
 #include <vector>
-#include <fstream>
-
-using namespace std;
+#include <string>
+#include <getopt.h>
 
 class Params {
 private:
@@ -22,9 +19,9 @@ private:
 public:
     Params() = default;
     Params(int argc, char * argv[]);
-    const bool isVerbose const() { return isVerbose; }
-    const bool isRecursive const() { return isRecursive; }
-    const bool isCaseInsensitive const() { return isCaseInsensitive; }
+    const bool isVerboseSwitchOn() const { return isVerbose; }
+    const bool isRecursiveSwitchOn() const { return isRecursive; }
+    const bool isCaseInsensitiveSwitchOn() const { return isCaseInsensitive; }
     void print();
     ~Params(){ if(outputFile.is_open()) outputFile.close(); }
 };
