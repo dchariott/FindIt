@@ -22,6 +22,9 @@ private:
 public:
     Params() = default;
     Params(int argc, char * argv[]);
+    const bool isVerbose const() { return isVerbose; }
+    const bool isRecursive const() { return isRecursive; }
+    const bool isCaseInsensitive const() { return isCaseInsensitive; }
     void print();
     ~Params(){ if(outputFile.is_open()) outputFile.close(); }
 };
