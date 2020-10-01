@@ -6,12 +6,12 @@
 class FileID {
 private:
     string name;
-    string iNodeNumber;
+    uint32_t iNodeNumber;
     string pathname;
     vector<string> sniffWords;
 public:
     FileID() = default;
-    FileID(const string name, const string iNodeNumber, const string pathname): name(name), iNodeNumber(iNodeNumber),
+    FileID(const string name, const uint32_t iNodeNumber, const string pathname): name(name), iNodeNumber(iNodeNumber),
     pathname(pathname) {}
     void print(ostream& out);
     void insertSniffWord(string sniffWord);
