@@ -1,7 +1,5 @@
 #pragma once
-#include "tools.hpp"
-#include <vector>
-#include <string>
+#include "Params.hpp"
 
 class FileID {
 private:
@@ -15,4 +13,5 @@ public:
     pathname(pathname) {}
     void print(ostream& out);
     void insertSniffWord(string sniffWord);
+    bool isSniffWordsEmpty() {return sniffWords.empty();};
 };

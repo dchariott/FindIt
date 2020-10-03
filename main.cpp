@@ -1,9 +1,9 @@
-#include "Params.hpp"
+#include "Sniff.hpp"
 
 int main( int argc, char * argv[] ) {
     banner();
-    Params params(argc, argv);
-    params.print();
+    Sniff sniff(argc, argv);
+    sniff.oneDir();
     bye();
     return 0;
 }

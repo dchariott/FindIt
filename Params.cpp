@@ -10,6 +10,7 @@ Params::Params(int argc, char* argv[]) {
     isRecursive = false;
     isCaseInsensitive = false;
     path = new char('.');
+    keyWords = "";
 
     static struct option long_options[]={
         {"dir", required_argument, NULL, 'd'},
@@ -49,8 +50,24 @@ Params::Params(int argc, char* argv[]) {
         command = command + argv[k] + " ";
         // fill vector keyWords
         if (k>=optind) {
-            keyWords.push_back(argv[k]);
+            if (keyWords == "") keyWords = string(argv[k]);
+            else keyWords = keyWords + " " + argv[k];
         }
+    }
+    // Detect keyWords content, Add usage comment
+    if (keyWords == "") {
+        cerr << "Command: \"" << command << "\" error. Not enough arguments.\
+        \n\nusage: findit [options] switch_argument keywords\
+        \noptions:\
+        \n\t-d, --dir (required) needs a path as argument, search from it. \
+        \n\t-o (optional) needs a filename as the output\
+        \n\t--verbose (optional) print name of every file that is opened. \
+        \n\t-R (optional) do a recursive search if this switch is present. \
+        \n\t-i (optional) do a case-insensitive search.\
+        \narguments:\
+        \n\tkeywords is a string of search words, separated by spaces.";
+        bye();
+        exit(0);
     }
 }
 
