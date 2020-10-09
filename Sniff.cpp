@@ -4,7 +4,7 @@ Sniff::Sniff(int argc, char * argv[]) {
     // Initial params
     params = new Params(argc, argv);
     pathName = params->getPath();
-//    params->print();
+
     // Transform space separated string into vector of words
     string word;
     istringstream instr(params->getKeyWords());
@@ -16,11 +16,7 @@ Sniff::Sniff(int argc, char * argv[]) {
             word = toLower(word);
         }
         words.push_back(word);
-    }
-//    for (int i=0; i<words.size(); i++) {
-//        cout << words[i] << endl;
-//    }
-    
+    }    
 }
 //----------------------
 void Sniff::oneDir() {

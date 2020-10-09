@@ -1,5 +1,5 @@
-#ifndef Params_h
-#define Params_h
+#ifndef Params_hpp
+#define Params_hpp
 #include "tools.hpp"
 #include <vector>
 #include <string>
@@ -32,4 +32,4 @@ public:
 
 
 
-#endif /* Params_h */
+#endif /* Params_hpp */
