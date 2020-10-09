@@ -60,7 +60,11 @@ void Sniff::oneDir() {
     closedir(dirp);
     // Print the files that includes keywords.
     for (int k=0; k<fileNames.size(); k++) {
-        fileNames[k].print(cout);
+        if (params->getOutputFileStream().is_open()){
+            fileNames[k].print(params->getOutputFileStream());
+        } else {
+            fileNames[k].print(cout);
+        }
     }
     cout << "\nDirectory \"" << pathName << "\" is done." << endl;
 }

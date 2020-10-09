@@ -22,7 +22,8 @@ public:
     const bool isVerboseSwitchOn() const { return isVerbose; }
     const bool isRecursiveSwitchOn() const { return isRecursive; }
     const bool isCaseInsensitiveSwitchOn() const { return isCaseInsensitive; }
-    const string getKeyWords () { return keyWords;}
+    const string getKeyWords() { return keyWords; }
+    ofstream& getOutputFileStream() { return outputFile; }
     char * getPath () { return path;}
     void print();
     ~Params(){ if(outputFile.is_open()) outputFile.close(); }
