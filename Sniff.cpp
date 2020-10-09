@@ -29,7 +29,7 @@ void Sniff::oneDir() {
     if ((dirp = opendir(pathName)) == NULL) {
         cout << "Open Directory " << pathName << " Error." << endl;
     }
-    cout << "\nDirectory \"" << pathName << "\" includes: " << endl;
+
     for(;;) {
         entry = readdir(dirp);
         if (entry==nullptr) break;
@@ -38,48 +38,25 @@ void Sniff::oneDir() {
             continue;
         else {
             switch (entry->d_type) {
-                case DT_DIR:
-                    cout << "Directory: " << entry->d_name << endl;
-                    break;
                 case DT_REG:
-                    cout << "File: " << entry->d_name << endl;
+                    if (params->isVerboseSwitchOn()){
+                        cout << "Searching file: " << entry->d_name << endl;
+                    }
                     tempID = oneFile(string(entry->d_name));
                     if (!tempID.isSniffWordsEmpty()) {
                         fileNames.push_back(tempID);
                     }
                     break;
-                case DT_LNK:
-                    cout << "Sym Link: " << entry->d_name << endl;
-                    break;
                 default:
-                    cout << "Skip file: " << entry->d_name << endl;
                     break;
             }
-            /*
-            // This is declared in Lecture, but it's not working
-            cout << "Type code: " << entry->d_type << " -> ";
-            if (S_ISDIR(entry->d_type)) {
-                // If directory
-                cout << "Directory: " << entry->d_name << endl;
-            } else if (S_ISREG(entry->d_type)) {
-                // If regular file
-                cout << entry->d_name << endl;
-            } else if (S_ISLNK(entry->d_type)) {
-                // If Symbolic link
-                cout << "Sym link: " << entry->d_name << endl;
-            } else if (S_ISSOCK(entry->d_type)) {
-                // If socket
-                cout << "Socket: " << entry->d_name << endl;
-            } else if (S_ISFIFO(entry->d_type)) {
-                // If pipe or socket
-                cout << "Pipe: " << entry->d_name << endl;
-            } else {
-                cout << "Skip file: " << entry->d_name << endl;
-            }
-             */
         }
     }
-    cout << endl;
+
+    if (params->isVerboseSwitchOn()){
+        cout << endl;
+    }
+
     closedir(dirp);
     // Print the files that includes keywords.
     for (int k=0; k<fileNames.size(); k++) {
@@ -102,6 +79,9 @@ FileID Sniff::oneFile(string fileName) {
         }
         for (int k=0; k<words.size(); k++) {
             if (words[k] == inFileWord) {
+                if(params->isVerboseSwitchOn()){
+                    cout << fileName << ": a search word was found in the file: " << words[k] << endl;
+                }
                 fileID.insertSniffWord(words[k]);
                 break;
             }

@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void FileID::print(ostream& out){
-    out << "iNode number\t\t\tPath\n"
+    out << "iNode number\t\t\tPath" << endl
         << iNodeNumber << "\t\t\t" << pathname
         << endl;
 }

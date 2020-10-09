@@ -13,5 +13,5 @@ public:
     pathname(pathname) {}
     void print(ostream& out);
     void insertSniffWord(string sniffWord);
-    bool isSniffWordsEmpty() {return sniffWords.empty();};
+    bool isSniffWordsEmpty() {return sniffWords.empty();}
 };
