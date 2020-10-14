@@ -16,6 +16,8 @@ private:
 public:
     Sniff(int argc, char * argv[]);
     void oneDir();
+    void run();
+    void travel(string path, string nextDir);
     FileID oneFile(string fileName);
     string trim(string word);
     string toLower(string word);

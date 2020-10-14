@@ -3,7 +3,7 @@
 int main( int argc, char * argv[] ) {
     banner();
     Sniff sniff(argc, argv);
-    sniff.oneDir();
+    sniff.run();
     bye();
     return 0;
 }

@@ -1,5 +1,6 @@
 #include "Sniff.hpp"
 
+//---------------------------- Initialize members in this object
 Sniff::Sniff(int argc, char * argv[]) {
     // Initial params
     params = new Params(argc, argv);
@@ -18,7 +19,28 @@ Sniff::Sniff(int argc, char * argv[]) {
         words.push_back(word);
     }    
 }
-//----------------------
+//---------------------------- Run
+void Sniff::run() {
+    currentDir = string(pathName);
+    // This call of travel() is only for debug
+    travel(currentDir, currentDir);
+    for (int k=0; k<fileNames.size(); ++k) {
+        cout << endl;
+        if (params->getOutputFileStream().is_open()){
+            fileNames[k].print(params->getOutputFileStream());
+        } else {
+            fileNames[k].print(cout);
+        }
+        fileNames[k].printSniffWord(cout);
+        cout << endl;
+    }
+}
+//---------------------------- Travel function
+void Sniff::travel(string path, string nextDir) {
+    // call oneDir() is just for debug, delete it to write more
+    oneDir();
+}
+//---------------------------- Processing one directory
 void Sniff::oneDir() {
     FileID tempID;
     DIR * dirp;
@@ -54,6 +76,7 @@ void Sniff::oneDir() {
     }
 
     closedir(dirp);
+    /*
     // Print the files that includes keywords.
     for (int k=0; k<fileNames.size(); k++) {
         if (params->getOutputFileStream().is_open()){
@@ -62,9 +85,10 @@ void Sniff::oneDir() {
             fileNames[k].print(cout);
         }
     }
+    */
     cout << "\nDirectory \"" << pathName << "\" is done." << endl;
 }
-//--------------------------------------Search a file
+//-------------------------------------- Search a file
 FileID Sniff::oneFile(string fileName) {
     FileID fileID(fileName, entry->d_ino, string(pathName)+"/"+fileName);
     ifstream cFile(string(pathName)+"/"+fileName);
