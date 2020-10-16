@@ -25,13 +25,9 @@ void Sniff::run() {
     string::size_type startOfDName = currentDir.find_last_of("/");
     currentDir = currentDir.substr(startOfDName + 1, string::npos);
 
-    int status = chdir(pathName);
-    if (status == -1 ){
-        cout << "There was a problem opening the directory: " << currentDir << endl;
-        abort();
-    }
+    travel(pathName, currentDir);
 
-    travel("./", currentDir);
+    params.print();
 
     for (FileID file : suspectFiles) {
         if (params.getOutputFileStream().is_open()){
@@ -49,8 +45,19 @@ void Sniff::run() {
 //---------------------------- Travel function
 void Sniff::travel(const string& path, const string& nextDir) {
     FileID tempID;
+
+    int status = chdir(path.c_str());
+    if (status == -1 ){
+        cout << "There was a problem opening the directory: " << nextDir << endl;
+        abort();
+    }
+
     DIR * dirp;
-    dirp = opendir(path.c_str());
+    dirp = opendir("./");
+
+    if(params.isVerboseSwitchOn()){
+        cout << "Processing the Directory: " << nextDir << endl;
+    }
 
     for(;;) {
         entry = readdir(dirp);
@@ -65,9 +72,8 @@ void Sniff::travel(const string& path, const string& nextDir) {
                         if (params.isVerboseSwitchOn()){
                             cout << "Opening Directory: " << entry->d_name << endl;
                         }
-                        travel(string("./") + entry->d_name, entry->d_name);
-                        char* cwd = new char[250];
-                        cout << getcwd(cwd, 250) << endl;
+                        travel(entry->d_name, entry->d_name);
+                        status = chdir("..");
                     } else{
                         if (params.isVerboseSwitchOn()){
                             cout << "Skipping Directory: " << entry->d_name << endl;
