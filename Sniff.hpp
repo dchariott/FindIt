@@ -7,21 +7,21 @@
 
 class Sniff {
 private:
-    Params * params;
+    Params params;
     string currentDir;
-    char * pathName;
+    char* pathName;
     vector<string> words;
-    vector<FileID> fileNames;
-    struct dirent * entry;
+    vector<FileID> suspectFiles;
+    struct dirent* entry;
+    static string trim(string word);
+    static string toLower(string word);
+    void travel(const string& path, const string& nextDir);
+    FileID oneFile(const string& fileName);
 public:
-    Sniff(int argc, char * argv[]);
-    void oneDir();
+    Sniff() = default;
+    Sniff(int argc, char* argv[]);
     void run();
-    void travel(string path, string nextDir);
-    FileID oneFile(string fileName);
-    string trim(string word);
-    string toLower(string word);
-    
+    ~Sniff() = default;
 };
 
 #endif /* Sniff_hpp */

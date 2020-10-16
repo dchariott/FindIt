@@ -2,9 +2,10 @@
 
 //--------------------------------------------------------------
 void FileID::print(ostream& out){
-    out << "iNode number: " << iNodeNumber 
-        << "\t\tPath: " << pathname
-        << endl;
+    out << "iNode number:" << "\t\tPath: "
+        << "\t\t\t\t\t\t\t\tFound search words:"
+        << endl << iNodeNumber << "\t\t" << pathname << "\t\t";
+    printSniffWords(out);
 }
 
 //--------------------------------------------------------------
@@ -20,10 +21,12 @@ void FileID::insertSniffWord(const string sniffWord){
 
 //--------------------------------------------------------------
 
-void FileID::printSniffWord(ostream& out){
-    out << "Sniff words: ";
-    for (string word : sniffWords) {
-        out << word << " ";
+void FileID::printSniffWords(ostream& out){
+    for (int k = 0; k < sniffWords.size(); ++k) {
+        out << sniffWords[k];
+        if (k < sniffWords.size() - 1){
+            out << ", ";
+        }
     }
     out << endl;
 }

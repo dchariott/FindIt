@@ -1,52 +1,56 @@
 #include "Sniff.hpp"
 
 //---------------------------- Initialize members in this object
-Sniff::Sniff(int argc, char * argv[]) {
-    // Initial params
-    params = new Params(argc, argv);
-    pathName = params->getPath();
+Sniff::Sniff(int argc, char* argv[]): params(argc, argv) {
+    pathName = params.getPath();
 
     // Transform space separated string into vector of words
     string word;
-    istringstream instr(params->getKeyWords());
+    istringstream instr(params.getKeyWords());
     for(;;) {
         if( instr.eof()) break;
         instr >> word;
-        if (params->isCaseInsensitiveSwitchOn()) {
+        if (params.isCaseInsensitiveSwitchOn()) {
             // Change to lower case if -i
             word = toLower(word);
         }
         words.push_back(word);
     }    
 }
+
 //---------------------------- Run
 void Sniff::run() {
+    ofstream& outputFile = params.getOutputFileStream();
     currentDir = string(pathName);
-    // This call of travel() is only for debug
-    travel(currentDir, currentDir);
-    for (int k=0; k<fileNames.size(); ++k) {
-        cout << endl;
-        if (params->getOutputFileStream().is_open()){
-            fileNames[k].print(params->getOutputFileStream());
+    string::size_type startOfDName = currentDir.find_last_of("/");
+    currentDir = currentDir.substr(startOfDName + 1, string::npos);
+
+    int status = chdir(pathName);
+    if (status == -1 ){
+        cout << "There was a problem opening the directory: " << currentDir << endl;
+        abort();
+    }
+
+    travel("./", currentDir);
+
+    for (FileID file : suspectFiles) {
+        if (params.getOutputFileStream().is_open()){
+            outputFile << endl;
+            file.print(outputFile);
+            outputFile << endl;
         } else {
-            fileNames[k].print(cout);
+            cout << endl;
+            file.print(cout);
+            cout << endl;
         }
-        fileNames[k].printSniffWord(cout);
-        cout << endl;
     }
 }
+
 //---------------------------- Travel function
-void Sniff::travel(string path, string nextDir) {
-    // call oneDir() is just for debug, delete it to write more
-    oneDir();
-}
-//---------------------------- Processing one directory
-void Sniff::oneDir() {
+void Sniff::travel(const string& path, const string& nextDir) {
     FileID tempID;
     DIR * dirp;
-    if ((dirp = opendir(pathName)) == NULL) {
-        cout << "Open Directory " << pathName << " Error." << endl;
-    }
+    dirp = opendir(path.c_str());
 
     for(;;) {
         entry = readdir(dirp);
@@ -56,13 +60,27 @@ void Sniff::oneDir() {
             continue;
         else {
             switch (entry->d_type) {
+                case DT_DIR:
+                    if(params.isRecursiveSwitchOn()){
+                        if (params.isVerboseSwitchOn()){
+                            cout << "Opening Directory: " << entry->d_name << endl;
+                        }
+                        travel(string("./") + entry->d_name, entry->d_name);
+                        char* cwd = new char[250];
+                        cout << getcwd(cwd, 250) << endl;
+                    } else{
+                        if (params.isVerboseSwitchOn()){
+                            cout << "Skipping Directory: " << entry->d_name << endl;
+                        }
+                    }
+                    break;
                 case DT_REG:
-                    if (params->isVerboseSwitchOn()){
+                    if (params.isVerboseSwitchOn()){
                         cout << "Searching file: " << entry->d_name << endl;
                     }
                     tempID = oneFile(string(entry->d_name));
                     if (!tempID.isSniffWordsEmpty()) {
-                        fileNames.push_back(tempID);
+                        suspectFiles.push_back(tempID);
                     }
                     break;
                 default:
@@ -71,42 +89,33 @@ void Sniff::oneDir() {
         }
     }
 
-    if (params->isVerboseSwitchOn()){
+    closedir(dirp);
+
+    cout << "\nDirectory \"" << nextDir << "\" is done." << endl;
+    if (params.isVerboseSwitchOn()){
         cout << endl;
     }
-
-    closedir(dirp);
-    /*
-    // Print the files that includes keywords.
-    for (int k=0; k<fileNames.size(); k++) {
-        if (params->getOutputFileStream().is_open()){
-            fileNames[k].print(params->getOutputFileStream());
-        } else {
-            fileNames[k].print(cout);
-        }
-    }
-    */
-    cout << "\nDirectory \"" << pathName << "\" is done." << endl;
 }
+
 //-------------------------------------- Search a file
-FileID Sniff::oneFile(string fileName) {
+FileID Sniff::oneFile(const string& fileName) {
     FileID fileID(fileName, entry->d_ino, string(pathName)+"/"+fileName);
-    ifstream cFile(string(pathName)+"/"+fileName);
+    ifstream cFile(fileName);
     string inFileWord;
     while (true) {
         if (cFile.eof()) break;
         cFile >> inFileWord;
-        inFileWord = trim(inFileWord);
-        if (params->isCaseInsensitiveSwitchOn()) {
+        inFileWord = Sniff::trim(inFileWord);
+        if (params.isCaseInsensitiveSwitchOn()) {
             // Change to lower case if -i
-            inFileWord = toLower(inFileWord);
+            inFileWord = Sniff::toLower(inFileWord);
         }
-        for (int k=0; k<words.size(); k++) {
-            if (words[k] == inFileWord) {
-                if(params->isVerboseSwitchOn()){
-                    cout << fileName << ": a search word was found in the file: " << words[k] << endl;
+        for (string& sniffWord : words) {
+            if (sniffWord == inFileWord) {
+                if(params.isVerboseSwitchOn()){
+                    cout << fileName << ": a search word was found in the file: " << sniffWord << endl;
                 }
-                fileID.insertSniffWord(words[k]);
+                fileID.insertSniffWord(sniffWord);
                 break;
             }
         }
@@ -115,6 +124,7 @@ FileID Sniff::oneFile(string fileName) {
     cFile.close();
     return fileID;
 }
+
 //--------------------------------Take off non-alpha character
 string Sniff::trim(string word) {
     for (string::iterator k=word.begin(); k<word.end(); k++) {
@@ -125,6 +135,7 @@ string Sniff::trim(string word) {
     }
     return word;
 }
+
 //--------------------------------To lower case string
 string Sniff::toLower(string word) {
     for (int k=0; k<word.size(); k++) {

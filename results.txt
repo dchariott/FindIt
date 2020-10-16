@@ -1,0 +1,32 @@
+
+iNode number:		Path: 								Found search words:
+17860963		../../../TestDirectory/classes.txt		java
+
+
+iNode number:		Path: 								Found search words:
+17861005		../../../TestDirectory/election.txt		trump
+
+
+iNode number:		Path: 								Found search words:
+17860963		../../../TestDirectory/classes.txt		java
+
+
+iNode number:		Path: 								Found search words:
+17861005		../../../TestDirectory/election.txt		trump
+
+
+iNode number:		Path: 								Found search words:
+17860963		../../../TestDirectory/classes.txt		java
+
+
+iNode number:		Path: 								Found search words:
+17861005		../../../TestDirectory/election.txt		trump
+
+
+iNode number:		Path: 								Found search words:
+17860963		../../../TestDirectory/classes.txt		java
+
+
+iNode number:		Path: 								Found search words:
+17861005		../../../TestDirectory/election.txt		trump
+
