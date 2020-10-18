@@ -27,7 +27,7 @@ void Sniff::run() {
 
     travel(pathName, currentDir);
 
-    params.print();
+    // params.print();
 
     for (FileID file : suspectFiles) {
         if (params.getOutputFileStream().is_open()){
@@ -46,7 +46,7 @@ void Sniff::run() {
 void Sniff::travel(const string& path, const string& nextDir) {
     FileID tempID;
 
-    int status = chdir(path.c_str());
+    int status = chdir(nextDir.c_str());
     if (status == -1 ){
         cout << "There was a problem opening the directory: " << nextDir << endl;
         abort();
@@ -72,7 +72,7 @@ void Sniff::travel(const string& path, const string& nextDir) {
                         if (params.isVerboseSwitchOn()){
                             cout << "Opening Directory: " << entry->d_name << endl;
                         }
-                        travel(entry->d_name, entry->d_name);
+                        travel(path+"/"+entry->d_name, entry->d_name);
                         status = chdir("..");
                     } else{
                         if (params.isVerboseSwitchOn()){
@@ -84,7 +84,7 @@ void Sniff::travel(const string& path, const string& nextDir) {
                     if (params.isVerboseSwitchOn()){
                         cout << "Searching file: " << entry->d_name << endl;
                     }
-                    tempID = oneFile(string(entry->d_name));
+                    tempID = oneFile(string(entry->d_name), path);
                     if (!tempID.isSniffWordsEmpty()) {
                         suspectFiles.push_back(tempID);
                     }
@@ -99,13 +99,13 @@ void Sniff::travel(const string& path, const string& nextDir) {
 
     cout << "\nDirectory \"" << nextDir << "\" is done." << endl;
     if (params.isVerboseSwitchOn()){
-        cout << endl;
+        cout << "++++++++++++++++++++++++++++++++++++++" << endl;
     }
 }
 
 //-------------------------------------- Search a file
-FileID Sniff::oneFile(const string& fileName) {
-    FileID fileID(fileName, entry->d_ino, string(pathName)+"/"+fileName);
+FileID Sniff::oneFile(const string& fileName, const string& path) {
+    FileID fileID(fileName, entry->d_ino, path+"/"+fileName);
     ifstream cFile(fileName);
     string inFileWord;
     while (true) {

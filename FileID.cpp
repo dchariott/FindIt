@@ -2,9 +2,9 @@
 
 //--------------------------------------------------------------
 void FileID::print(ostream& out){
-    out << "iNode number:" << "\t\tPath: "
-        << "\t\t\t\t\t\t\t\tFound search words:"
-        << endl << iNodeNumber << "\t\t" << pathname << "\t\t";
+    out << "iNode number:" << "\t\t" << setw(60) << left << "Path:" 
+        << "\tFound search words:"
+        << endl << iNodeNumber << "\t\t" << setw(60) << left << pathname << "\t";
     printSniffWords(out);
 }
 

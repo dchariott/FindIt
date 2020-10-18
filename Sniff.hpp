@@ -16,7 +16,7 @@ private:
     static string trim(string word);
     static string toLower(string word);
     void travel(const string& path, const string& nextDir);
-    FileID oneFile(const string& fileName);
+    FileID oneFile(const string& fileName, const string& path);
 public:
     Sniff() = default;
     Sniff(int argc, char* argv[]);
